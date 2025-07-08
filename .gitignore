@@ -1,0 +1,37 @@
+# Terraform state files
+*.tfstate
+*.tfstate.backup
+*.tfvars
+terraform.tfvars
+.terraform/
+
+# PEM keys and sensitive files
+*.pem
+*.key
+
+# Environment configuration
+.env
+
+# Log, temp, and retry files
+*.tmp
+*.retry
+
+# Editor and OS-specific files
+*.swp
+.DS_Store
+.vscode/
+.idea/
+*.bash_history
+
+# Python cache and build files
+__pycache__/
+*.py[cod]
+
+# Node.js modules
+node_modules/
+
+# Cache folders
+.cache/
+
+# Vars and temp override files
+**/vars*
