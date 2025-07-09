@@ -20,3 +20,12 @@ resource "aws_vpc" "cloud_notification_platform_network" {
     Name = "cloud-notification-platform-vpc"
   }
 }
+
+# ------------------- Internal IAM -----------------
+# Create internal groups
+resource "aws_iam_group" "teams" {
+	for_each 	=		toset(var.team_groups)
+	name 		=		each.key
+	path		=		"/internal/"
+}
+
