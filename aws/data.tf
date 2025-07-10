@@ -1,3 +1,3 @@
 # Retrieve AWS account ID dynamically
-# Ref: REFERENCES.md – section "Terraform Data Sources"
+# Ref: aws_references.md – section "Terraform Data Sources"
 data "aws_caller_identity" "current" {}

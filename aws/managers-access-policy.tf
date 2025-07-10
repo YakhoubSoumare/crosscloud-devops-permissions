@@ -1,4 +1,4 @@
-# Ref: REFERENCES.md – section "IAM and Policies"
+# Ref: aws_references.md – section "IAM and Policies"
 
 # IAM policy for Managers group (read-only MQTT access)
 resource "aws_iam_policy" "managers_policy" {

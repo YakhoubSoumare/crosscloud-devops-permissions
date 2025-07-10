@@ -22,7 +22,7 @@ variable "cidr_block" {
   description = "CIDR block for VPC"
 }
 
-# Ref: REFERENCES.md – section "Loops and Dynamic Configuration"
+# Ref: aws_references.md – section "Loops and Dynamic Configuration"
 variable "team_groups" {
   type        = list(string)
   default     = ["DevOps", "Developers", "Managers"]
