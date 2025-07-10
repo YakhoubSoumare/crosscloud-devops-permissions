@@ -27,3 +27,13 @@ resource "azurerm_virtual_network" "cloud_notification_vnet" {
   location            = azurerm_resource_group.rg.location
   address_space       = [var.cidr_block]
 }
+
+# ------------------- Internal IAM -----------------
+# Create internal groups
+# Ref: aws_references.md – section "Loops and Dynamic Configuration"
+resource "azuread_group" "teams" {
+        for_each         = toset(var.team_groups)
+        display_name     = "internal-${each.key}"					# Eg. internal-DevOps
+        description      = "Internal access group for ${each.key}"
+        security_enabled = true										# Needed for RBAC
+}
