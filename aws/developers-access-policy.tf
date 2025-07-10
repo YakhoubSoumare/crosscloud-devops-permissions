@@ -1,4 +1,4 @@
-# Ref: REFERENCES.md – section "IAM and Policies"
+# Ref: aws_references.md – section "IAM and Policies"
 
 # Define custom IAM policy for Developers group
 resource "aws_iam_policy" "developers_policy" {
