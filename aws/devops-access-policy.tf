@@ -1,5 +1,4 @@
-# Retrieve AWS account ID dynamically
-data "aws_caller_identity" "current" {}
+# Ref: REFERENCES.md – section "IAM and Policies"
 
 # Define custom IAM policy for DevOps group
 resource "aws_iam_policy" "devops_policy" {
@@ -10,7 +9,9 @@ resource "aws_iam_policy" "devops_policy" {
   policy = jsonencode({
 	    Version = "2012-10-17",
 	    Statement = [
-	      { # Allow describing VPC and subnet resources
+	    
+		  # Allow describing VPC and subnet resources
+	      {
 	        Sid    = "VPCAndBasicInfra",
 	        Effect = "Allow",
 	        Action = [
@@ -20,7 +21,9 @@ resource "aws_iam_policy" "devops_policy" {
 	        ],
 	        Resource = "*"
 	      },
-	      { # Allow access to Terraform state in S3 bucket
+
+	      # Allow access to Terraform state in S3 bucket
+	      { 
 	        Sid    = "S3StateAccess",
 	        Effect = "Allow",
 	        Action = [
@@ -33,7 +36,9 @@ resource "aws_iam_policy" "devops_policy" {
 	          "arn:aws:s3:::${var.s3_bucket_name}/*"
 	        ]
 	      },
-	      { # Allow Terraform state locking with DynamoDB
+
+	      # Allow Terraform state locking with DynamoDB
+	      {
 	        Sid    = "DynamoDBLocking",
 	        Effect = "Allow",
 	        Action = [
@@ -43,7 +48,9 @@ resource "aws_iam_policy" "devops_policy" {
 	        ],
 	        Resource = "arn:aws:dynamodb:${var.aws_region}:${data.aws_caller_identity.current.account_id}:table/${var.dynamodb_table_name}"
 	      },
-	      { # Full access to AWS IoT Core
+
+	      # Full access to AWS IoT Core
+	      {
 	        Sid    = "IoTCoreAccess",
 	        Effect = "Allow",
 	        Action = [
@@ -51,7 +58,9 @@ resource "aws_iam_policy" "devops_policy" {
 	        ],
 	        Resource = "*"
 	      },
-	      { # Full access to Lambda functions and logs
+
+	      # Full access to Lambda functions and logs
+	      {
 	        Sid    = "LambdaAndLogs",
 	        Effect = "Allow",
 	        Action = [
@@ -60,10 +69,12 @@ resource "aws_iam_policy" "devops_policy" {
 	        ],
 	        Resource = "*"
 	      },
-	      { # Allow group-level IAM operations (for internal teams)
-			"Sid": "IAMGroupScoped",
-			"Effect": "Allow",
-			"Action": [
+
+	      # Allow group-level IAM operations (for internal teams)
+	      {
+			Sid	   = "IAMGroupScoped",
+			Effect = "Allow",
+			Action = [
 			  "iam:CreateGroup",
 			  "iam:DeleteGroup",
 			  "iam:GetGroup",
@@ -74,7 +85,30 @@ resource "aws_iam_policy" "devops_policy" {
 			  "iam:DetachGroupPolicy"
 			],
 			"Resource": "*"	
+	 	  },
+
+	 	  # Full access to SQS for DLQ management
+	 	  {
+	 	    Sid    = "SQSAccess",
+	 	    Effect = "Allow",
+	 	    Action = [
+	 	      "sqs:CreateQueue",
+	 	      "sqs:DeleteQueue",
+	 	      "sqs:GetQueueAttributes",
+	 	      "sqs:SetQueueAttributes",
+	 	      "sqs:SendMessage",
+	 	      "sqs:ReceiveMessage",
+	 	      "sqs:DeleteMessage",
+	 	      "sqs:ListQueues"
+	 	    ],
+	 	    Resource = "arn:aws:sqs:${var.aws_region}:${data.aws_caller_identity.current.account_id}:*"
 	 	  }
 	    ]
-	  })
+  })
+}
+
+# Attach custom policy to DevOps group
+resource "aws_iam_group_policy_attachment" "devops_policy_attach" {
+  group      = aws_iam_group.teams["DevOps"].name
+  policy_arn = aws_iam_policy.devops_policy.arn
 }
