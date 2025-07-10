@@ -23,6 +23,7 @@ resource "aws_vpc" "cloud_notification_platform_network" {
 
 # ------------------- Internal IAM -----------------
 # Create internal groups
+# Ref: REFERENCES.md – section "Loops and Dynamic Configuration"
 resource "aws_iam_group" "teams" {
 	for_each 	=		toset(var.team_groups)
 	name 		=		each.key
